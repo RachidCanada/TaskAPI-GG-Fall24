@@ -1,8 +1,10 @@
 from flask import Flask, jsonify
 from views.task_view import task
 from views.user_view import user
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 app.register_blueprint(task)
 app.register_blueprint(user)
