@@ -4,7 +4,8 @@ from views.user_view import user
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True)
+app.url_map.strict_slashes = False
 
 app.register_blueprint(task)
 app.register_blueprint(user)
@@ -15,7 +16,7 @@ def errorHandler(self):
 
 @app.route("/")
 def index():
-    return "Home"
+    return "<h1>Home</h1>"
 
 if __name__ == "__main__":
     app.run()
