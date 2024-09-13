@@ -57,6 +57,23 @@ def getCreatedTasks():
 
     return tasks
 
+@task.route("/v1/tasks/createdby/<userUid>", methods=["GET"])
+def getCreatedByUserTasks(userUid):
+    try:
+        token = validateJWT()
+
+        if token == 400:
+            return jsonify({"error": 'Token is missing in the request, please try again'}), 401
+
+        if token == 401:
+            return jsonify({"error": 'Invalid authentication token, please login again'}), 403
+
+        tasks = jsonify(task_controller.tasksCreatedAssigned(userUid, 'createdByUid')), 200
+    except ValueError as err:
+        return jsonify({"error": str(err)}), 400
+
+    return tasks
+
 @task.route("/v1/tasks/assignedto/", methods=["GET"])
 def getAssignedTasks():
     try:
@@ -70,6 +87,23 @@ def getAssignedTasks():
         
         tasks = jsonify(task_controller.tasksAssignedTo(token)), 200
 
+    except ValueError as err:
+        return jsonify({"error": str(err)}), 400
+
+    return tasks
+
+@task.route("/v1/tasks/assignedto/<userUid>", methods=["GET"])
+def getAssignedToUserTasks(userUid):
+    try:
+        token = validateJWT()
+
+        if token == 400:
+            return jsonify({"error": 'Token is missing in the request, please try again'}), 401
+
+        if token == 401:
+            return jsonify({"error": 'Invalid authentication token, please login again'}), 403
+
+        tasks = jsonify(task_controller.tasksCreatedAssigned(userUid, 'assignedToUid')), 200
     except ValueError as err:
         return jsonify({"error": str(err)}), 400
 

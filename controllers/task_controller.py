@@ -23,6 +23,29 @@ def createTask(task, token):
 
     return taskCollection.insert_one(task.__dict__)
 
+def tasksCreatedAssigned(uid, typeTask) -> list:
+    try:
+        taskCollection = database.dataBase[config.CONST_TASK_COLLECTION]
+        userCollection = database.dataBase[config.CONST_USER_COLLECTION]
+
+        tasks = []
+        for task in taskCollection.find({typeTask: str(uid)}):
+            currentTask = {}
+
+            currentTask.update({'taskUid': str(task['_id'])})
+            currentTask.update({'assignedToUid': task['assignedToUid']})
+            currentTask.update({'assignedToName': task['assignedToName']})
+            currentTask.update({'createdByUid': task['createdByUid']})
+            currentTask.update({'createdByName': task['createdByName']})
+            currentTask.update({'description': task['description']})
+            currentTask.update({'done': task['done']})
+            tasks.append(currentTask)
+
+        return {"allTasks" : tasks}
+        
+    except:
+         raise ValueError('Error on getting tasks information')
+
 def tasksCreatedBy(token) -> list:
     try:
         taskCollection = database.dataBase[config.CONST_TASK_COLLECTION]
